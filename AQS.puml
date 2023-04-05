@@ -1,0 +1,119 @@
+@startuml
+abstract class java.util.concurrent.locks.AbstractQueuedSynchronizer {
+- {static} long serialVersionUID
+- Node head
+- Node tail
+- int state
+~ {static} long spinForTimeoutThreshold
+- {static} Unsafe unsafe
+- {static} long stateOffset
+- {static} long headOffset
+- {static} long tailOffset
+- {static} long waitStatusOffset
+- {static} long nextOffset
+# int getState()
+# void setState(int)
+# boolean compareAndSetState(int,int)
+- Node enq(Node)
+- Node addWaiter(Node)
+- void setHead(Node)
+- void unparkSuccessor(Node)
+- void doReleaseShared()
+- void setHeadAndPropagate(Node,int)
+- void cancelAcquire(Node)
+- {static} boolean shouldParkAfterFailedAcquire(Node,Node)
+~ {static} void selfInterrupt()
+- boolean parkAndCheckInterrupt()
+~ boolean acquireQueued(Node,int)
+- void doAcquireInterruptibly(int)
+- boolean doAcquireNanos(int,long)
+- void doAcquireShared(int)
+- void doAcquireSharedInterruptibly(int)
+- boolean doAcquireSharedNanos(int,long)
+# boolean tryAcquire(int)
+# boolean tryRelease(int)
+# int tryAcquireShared(int)
+# boolean tryReleaseShared(int)
+# boolean isHeldExclusively()
++ void acquire(int)
++ void acquireInterruptibly(int)
++ boolean tryAcquireNanos(int,long)
++ boolean release(int)
++ void acquireShared(int)
++ void acquireSharedInterruptibly(int)
++ boolean tryAcquireSharedNanos(int,long)
++ boolean releaseShared(int)
++ boolean hasQueuedThreads()
++ boolean hasContended()
++ Thread getFirstQueuedThread()
+- Thread fullGetFirstQueuedThread()
++ boolean isQueued(Thread)
+~ boolean apparentlyFirstQueuedIsExclusive()
++ boolean hasQueuedPredecessors()
++ int getQueueLength()
++ Collection<Thread> getQueuedThreads()
++ Collection<Thread> getExclusiveQueuedThreads()
++ Collection<Thread> getSharedQueuedThreads()
++ String toString()
+~ boolean isOnSyncQueue(Node)
+- boolean findNodeFromTail(Node)
+~ boolean transferForSignal(Node)
+~ boolean transferAfterCancelledWait(Node)
+~ int fullyRelease(Node)
++ boolean owns(ConditionObject)
++ boolean hasWaiters(ConditionObject)
++ int getWaitQueueLength(ConditionObject)
++ Collection<Thread> getWaitingThreads(ConditionObject)
+- boolean compareAndSetHead(Node)
+- boolean compareAndSetTail(Node,Node)
+- {static} boolean compareAndSetWaitStatus(Node,int,int)
+- {static} boolean compareAndSetNext(Node,Node,Node)
+}
+class java.util.concurrent.locks.AbstractQueuedSynchronizer.Node {
+~ {static} Node SHARED
+~ {static} Node EXCLUSIVE
+~ {static} int CANCELLED
+~ {static} int SIGNAL
+~ {static} int CONDITION
+~ {static} int PROPAGATE
+~ int waitStatus
+~ Node prev
+~ Node next
+~ Thread thread
+~ Node nextWaiter
+~ boolean isShared()
+~ Node predecessor()
+}
+class java.util.concurrent.locks.AbstractQueuedSynchronizer.ConditionObject {
+- {static} long serialVersionUID
+- Node firstWaiter
+- Node lastWaiter
+- {static} int REINTERRUPT
+- {static} int THROW_IE
+- Node addConditionWaiter()
+- void doSignal(Node)
+- void doSignalAll(Node)
+- void unlinkCancelledWaiters()
++ void signal()
++ void signalAll()
++ void awaitUninterruptibly()
+- int checkInterruptWhileWaiting(Node)
+- void reportInterruptAfterWait(int)
++ void await()
++ long awaitNanos(long)
++ boolean awaitUntil(Date)
++ boolean await(long,TimeUnit)
+~ boolean isOwnedBy(AbstractQueuedSynchronizer)
+# boolean hasWaiters()
+# int getWaitQueueLength()
+# Collection<Thread> getWaitingThreads()
+}
+
+
+java.util.concurrent.locks.Serializable <|.. java.util.concurrent.locks.AbstractQueuedSynchronizer
+java.util.concurrent.locks.AbstractOwnableSynchronizer <|-- java.util.concurrent.locks.AbstractQueuedSynchronizer
+java.util.concurrent.locks.AbstractQueuedSynchronizer +.. java.util.concurrent.locks.AbstractQueuedSynchronizer.Node
+java.util.concurrent.locks.AbstractQueuedSynchronizer +.. java.util.concurrent.locks.AbstractQueuedSynchronizer.ConditionObject
+java.util.concurrent.locks.Condition <|.. java.util.concurrent.locks.AbstractQueuedSynchronizer.ConditionObject
+java.util.concurrent.locks.Serializable <|.. java.util.concurrent.locks.AbstractQueuedSynchronizer.ConditionObject
+@enduml
